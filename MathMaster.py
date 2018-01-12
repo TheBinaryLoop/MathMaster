@@ -3,9 +3,10 @@ import sys
 from sys import exit
 import os
 import argparse
+from updater import Updater
 
 _NAME = "MathMaster"
-_VERSION = "v1.0.2"
+_VERSION = "1.0.2"
 _CHANNEL = "ALPHA"
 
 ts = os.get_terminal_size()
@@ -573,10 +574,14 @@ def menu():
 
 
 if __name__ == "__main__":
-    os.system("title {} {} {}".format(_NAME, _VERSION, _CHANNEL))
+    updateAgent = Updater()
+    updateAgent.check_for_update(_VERSION)
+    _ = input("Press any key to continue...")
+
+    os.system("title {} v{} {}".format(_NAME, _VERSION, _CHANNEL))
     parser = argparse.ArgumentParser(description='Process some startup parameters.')
     parser.add_argument('--self-check', action='store_true', help='run self test on mathematical functions')
-    parser.add_argument('-v', '--version', action='version', version='{} {} {}'.format(_NAME, _VERSION, _CHANNEL))
+    parser.add_argument('-v', '--version', action='version', version='{} v{} {}'.format(_NAME, _VERSION, _CHANNEL))
     args = parser.parse_args()
 
     if args.self_check is True:
