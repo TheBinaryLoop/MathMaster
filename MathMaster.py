@@ -6,7 +6,7 @@ import argparse
 from updater import Updater
 
 _NAME = "MathMaster"
-_VERSION = "1.0.2"
+_VERSION = "1.0.3"
 _CHANNEL = "ALPHA"
 
 ts = os.get_terminal_size()
@@ -184,9 +184,9 @@ def print_test(text):
 
 def print_test_result(text, result):
     if result:
-        sys.stderr.write('[+] Test: {}: '.format(text) + '\x1b[1;32mPASS\x1b[0m\n')
+        sys.stdout.write('[+] Test: {}: '.format(text) + '\x1b[1;32mPASS\x1b[0m\n')
     else:
-        sys.stderr.write('[+] Test: {}: '.format(text) + '\x1b[1;31mFAIL\x1b[0m\n')
+        sys.stderr.write('[+] Test: {}: '.format(text) + '\x1b[1;31mFAILED\x1b[0m\n')
 
 
 def self_check():
@@ -438,20 +438,26 @@ def get_usable_formula():
     return True
 
 
+def saveInput(prompt: str, default):
+   value = input(prompt)
+   if value == '':
+      return default
+   return value
+
 def get_known_values():
     global a, b, c, h, p, q, alpha, beta, gamma, angle
     try:
         print('[+] Gebe bekannte Längen an:')
-        a = float(input("a: "))
-        b = float(input("b: "))
-        c = float(input("c: "))
-        h = float(input("h: "))
-        p = float(input("p: "))
-        q = float(input("q: "))
+        a = float(saveInput("a: ", 0))
+        b = float(saveInput("b: ", 0))
+        c = float(saveInput("c: ", 0))
+        h = float(saveInput("h: ", 0))
+        p = float(saveInput("p: ", 0))
+        q = float(saveInput("q: ", 0))
         print('[+] Gebe bekannte Winkel an(Mindestens ein Winkel muss 90° sein):')
-        alpha = float(input("alpha: "))
-        beta = float(input("beta: "))
-        gamma = float(input("gamma: "))
+        alpha = float(saveInput("alpha: ", 0))
+        beta = float(saveInput("beta: ", 0))
+        gamma = float(saveInput("gamma: ", 0))
     except:
         print("Unexpected error:", sys.exc_info()[0])
         return False
@@ -574,15 +580,15 @@ def menu():
 
 
 if __name__ == "__main__":
-    updateAgent = Updater()
-    updateAgent.check_for_update(_VERSION)
-    _ = input("Press any key to continue...")
-
     os.system("title {} v{} {}".format(_NAME, _VERSION, _CHANNEL))
     parser = argparse.ArgumentParser(description='Process some startup parameters.')
     parser.add_argument('--self-check', action='store_true', help='run self test on mathematical functions')
     parser.add_argument('-v', '--version', action='version', version='{} v{} {}'.format(_NAME, _VERSION, _CHANNEL))
     args = parser.parse_args()
+
+    updateAgent = Updater()
+    updateAgent.check_for_update(_VERSION)
+    _ = input("Press any key to continue...")
 
     if args.self_check is True:
         self_check()
